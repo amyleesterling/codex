@@ -1,5 +1,41 @@
 {% extends "base.html" %}
 {% block title %} Search {% endblock title %}
+
+{# Nurro's tour of a results page. Selectors were checked against the rendered page, not just this template. #}
+{% block tour %}
+<ol class="holotip-steps" id="tour" hidden>
+  <li data-holotip-target="#filter_string" data-holotip-side="bottom" data-holotip-title="Hi, I'm Nurro"
+      data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-cape.png')}}">
+    {% if filter_string %}
+    <p>You just landed in Codex, the map itself. This box holds your question, <b>{{filter_string}}</b>, and you can change it to ask for any cell.</p>
+    {% else %}
+    <p>You just landed in Codex, the map itself. This box asks for any cell: try a type like <b>DNp03</b>, a name, or an ID.</p>
+    {% endif %}
+  </li>
+  {% if num_items %}
+  <li data-holotip-target="table.table tbody tr:first-child td:first-child" data-holotip-side="right" data-holotip-title="One row, one neuron"
+      data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-microscope.png')}}">
+    <p>Codex found {{display(num_items)}} cells that match. Each row is one real neuron from one fly, and the picture is its shape.</p>
+  </li>
+  <li data-holotip-target="table.table tbody tr:first-child td:first-child > a" data-holotip-side="right" data-holotip-title="Everything about one cell"
+      data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-lab.png')}}">
+    <p>Click a name to open that cell's own page: its partners, its shape in 3D, and every label people have given it.</p>
+  </li>
+  <li data-holotip-target="table.table tbody tr:first-child a[href*='upstream']" data-holotip-side="bottom" data-holotip-title="Follow the wiring"
+      data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-rocket.png')}}">
+    <p>Upstream cells send this one signals and downstream cells receive them. Either link walks the wiring one hop at a time.</p>
+  </li>
+  <li data-holotip-target=".card.bg-light" data-holotip-side="bottom" data-holotip-title="The whole list at once"
+      data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-rocket.png')}}">
+    <p>These take every cell in the list together. Network draws the wiring between them, and 3D view opens them in a viewer you can spin.</p>
+  </li>
+  {% endif %}
+  <li data-holotip-target="#nav_tour" data-holotip-side="bottom" data-holotip-title="That's the tour" data-holotip-next="Done"
+      data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-shades.png')}}">
+    <p>I'll be under Tour in the menu whenever you want this again. Everything else you find by clicking.</p>
+  </li>
+</ol>
+{% endblock tour %}
 {% block content %}
 
 <nav class="navbar navbar-light bg-light">

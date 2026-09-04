@@ -199,6 +199,9 @@
   padding-right: 26px;
 }
 
+/* a word is one flex item, so wrapping happens between words only */
+.holotip-word { display: inline-flex; gap: 1px; }
+
 .holotip-letter {
   display: inline-block;
   opacity: 0;

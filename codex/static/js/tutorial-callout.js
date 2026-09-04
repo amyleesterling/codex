@@ -265,15 +265,29 @@
       h.id = this.id + "-title-" + i;
       /* the accessible name is the whole title, not the letter spans */
       h.setAttribute("aria-label", step.title);
-      var chars = String(step.title).split("");
-      chars.forEach(function (ch, n) {
-        var s = el("span", "holotip-letter");
-        s.setAttribute("aria-hidden", "true");
-        /* capped stagger. Uncapped, a long title is still assembling after
-           the reader has moved on to the body copy */
-        s.style.animationDelay = Math.min(n * 0.022, 0.24) + "s";
-        s.textContent = ch === " " ? " " : ch;
-        h.appendChild(s);
+      /* letters are grouped by word, so a long title wraps between words
+         and never in the middle of one */
+      var n = 0;
+      String(step.title).split(" ").forEach(function (word, w) {
+        if (w > 0) {
+          var sp = el("span", "holotip-letter");
+          sp.setAttribute("aria-hidden", "true");
+          sp.textContent = " ";
+          h.appendChild(sp);
+          n++;
+        }
+        var wrap = el("span", "holotip-word");
+        wrap.setAttribute("aria-hidden", "true");
+        word.split("").forEach(function (ch) {
+          var s = el("span", "holotip-letter");
+          /* capped stagger. Uncapped, a long title is still assembling after
+             the reader has moved on to the body copy */
+          s.style.animationDelay = Math.min(n * 0.022, 0.24) + "s";
+          s.textContent = ch;
+          wrap.appendChild(s);
+          n++;
+        });
+        h.appendChild(wrap);
       });
       node.appendChild(h);
       node.setAttribute("aria-labelledby", h.id);

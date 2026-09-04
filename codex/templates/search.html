@@ -47,9 +47,10 @@
     {% endif %}
   </li>
   {% if num_items %}
-  <li data-holotip-target="table.table tbody tr:first-child td:nth-child(6)" data-holotip-side="left" data-holotip-title="Where wiring becomes behaviour"
+  {# the classification column moves one to the right when the search adds a column, as a downstream search does #}
+  <li data-holotip-target="table.table tbody tr:first-child td:nth-child({{ 7 if extra_data else 6 }})" data-holotip-side="left" data-holotip-title="Where wiring becomes behaviour"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-microscope.png')}}">
-    <p>Read the classification. A motor neuron here means the signal has left the nervous system: it runs out a nerve and ends on a muscle.</p>
+    <p>Read the classification. A motor neuron here means the signal is about to leave the nervous system: its axon runs out a nerve and ends on a muscle.</p>
   </li>
   {% endif %}
   <li data-holotip-target="#nav_tour" data-holotip-side="bottom" data-holotip-title="That's the trail" data-holotip-next="Done"

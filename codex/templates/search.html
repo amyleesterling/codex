@@ -40,7 +40,11 @@
 <ol class="holotip-steps" id="tour-downstream" data-holotip-chapter="downstream" hidden>
   <li data-holotip-target="table.table tbody tr:first-child td:first-child" data-holotip-side="right" data-holotip-title="The signal arrives"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-rocket.png')}}">
-    <p>Every cell here hears the one you came from. {% if num_items %}{{display(num_items)}} of them, each a real neuron with its own page.{% endif %}</p>
+    {% if num_items %}
+    <p>Every cell here hears the one you came from. {{display(num_items)}} of them, each a real neuron with its own page.</p>
+    {% else %}
+    <p>This list would be every cell that hears the one you came from. This snapshot has none recorded for it, which happens at the edge of what was traced.</p>
+    {% endif %}
   </li>
   {% if num_items %}
   <li data-holotip-target="table.table tbody tr:first-child td:nth-child(6)" data-holotip-side="left" data-holotip-title="Where wiring becomes behaviour"

@@ -144,11 +144,12 @@
     this._reposition();
     node.focus();
 
-    /* a hand off: the visitor's click on the target is the Next button */
-    if (step.await === "click") {
+    /* a hand off: the visitor's click on the target is the Next button. With
+       no target on screen there is nothing to click, so Next stays. */
+    if (step.await === "click" && target) {
       var nextBtn = node.querySelector(".holotip-next");
       if (nextBtn) nextBtn.style.display = "none";
-      if (target) {
+      {
         var self2 = this;
         var onClick = function () {
           target.removeEventListener("click", onClick, true);

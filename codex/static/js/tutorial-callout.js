@@ -96,6 +96,7 @@
 
   Tour.prototype._clearTarget = function () {
     if (this._cycle) { clearInterval(this._cycle); this._cycle = null; }
+    if (this._handoffOff) { this._handoffOff(); this._handoffOff = null; }
     if (this._popGroup) { this._popGroup.forEach(function (g) { g.classList.remove("holotip-pop"); }); this._popGroup = null; }
     if (this.target) {
       this.target.classList.remove("holotip-target");
@@ -142,6 +143,21 @@
 
     this._reposition();
     node.focus();
+
+    /* a hand off: the visitor's click on the target is the Next button */
+    if (step.await === "click") {
+      var nextBtn = node.querySelector(".holotip-next");
+      if (nextBtn) nextBtn.style.display = "none";
+      if (target) {
+        var self2 = this;
+        var onClick = function () {
+          target.removeEventListener("click", onClick, true);
+          if (typeof self2.onHandoff === "function") self2.onHandoff(step);
+        };
+        target.addEventListener("click", onClick, true);
+        this._handoffOff = function () { target.removeEventListener("click", onClick, true); };
+      }
+    }
 
     /* a step that names a group pops each member in turn; motion off leaves
        them still, since a pop is decoration and the card already points at the bar */
@@ -396,6 +412,10 @@
         /* a selector matching several elements: the card stays put and each
            one pops in turn, every `cycle` ms */
         pop: li.getAttribute("data-holotip-pop") || null,
+        /* await="click": Next is hidden and the step ends when the visitor clicks
+           the target, which is how a story hands off to the page that opens */
+        await: li.getAttribute("data-holotip-await") || null,
+        goto: li.getAttribute("data-holotip-goto") || null,
         html: li.innerHTML
       });
     });

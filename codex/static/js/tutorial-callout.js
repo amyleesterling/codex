@@ -95,10 +95,30 @@
   };
 
   Tour.prototype._clearTarget = function () {
+    if (this._cycle) { clearInterval(this._cycle); this._cycle = null; }
+    if (this._popGroup) { this._popGroup.forEach(function (g) { g.classList.remove("holotip-pop"); }); this._popGroup = null; }
     if (this.target) {
       this.target.classList.remove("holotip-target");
       this.target = null;
     }
+  };
+
+  /* point the open card at another element, without rebuilding it */
+  Tour.prototype._retarget = function (target, phase) {
+    if (this.target) this.target.classList.remove("holotip-target");
+    this.target = target || null;
+    if (target) {
+      target.classList.add("holotip-target");
+      if (!this._inView(target)) this._reveal(target);
+    }
+    if (this.node) {
+      var marks = this.node.querySelectorAll("[data-holotip-phase]");
+      Array.prototype.forEach.call(marks, function (m) {
+        m.classList.toggle("is-on", m.getAttribute("data-holotip-phase") === String(phase));
+      });
+      this.node.classList.add("is-moving");
+    }
+    this._reposition();
   };
 
   Tour.prototype.go = function (i) {
@@ -122,6 +142,40 @@
 
     this._reposition();
     node.focus();
+
+    /* a step that names a group pops each member in turn; motion off leaves
+       them still, since a pop is decoration and the card already points at the bar */
+    if (step.pop && !reduce.matches) {
+      var group = Array.prototype.slice.call(document.querySelectorAll(step.pop));
+      if (group.length) {
+        var k = -1, tour = this;
+        var pop = function () {
+          if (k >= 0) group[k].classList.remove("holotip-pop");
+          k = (k + 1) % group.length;
+          group[k].classList.remove("holotip-pop"); void group[k].offsetWidth;
+          group[k].classList.add("holotip-pop");
+        };
+        pop();
+        this._cycle = setInterval(pop, step.cycle || 800);
+        this._popGroup = group;
+      }
+    }
+
+    /* a step with several targets walks between them; motion off shows the
+       first and lights every phase word, so nothing is withheld */
+    if (step.targets && step.targets.length > 1) {
+      var self = this, phase = 0;
+      var els = step.targets.map(function (sel) { return document.querySelector(sel); });
+      if (reduce.matches) {
+        Array.prototype.forEach.call(node.querySelectorAll("[data-holotip-phase]"), function (m) { m.classList.add("is-on"); });
+      } else if (els.every(Boolean)) {
+        this._retarget(els[0], 0);
+        this._cycle = setInterval(function () {
+          phase = (phase + 1) % els.length;
+          self._retarget(els[phase], phase);
+        }, step.cycle || 3000);
+      }
+    }
     return this;
   };
 
@@ -335,6 +389,13 @@
         title: li.getAttribute("data-holotip-title") || "",
         nextLabel: li.getAttribute("data-holotip-next") || null,
         guide: li.getAttribute("data-holotip-guide") || null,
+        /* "sel1|sel2": the card moves between them every `cycle` ms, and any
+           [data-holotip-phase=N] inside the card lights while target N is up */
+        targets: (li.getAttribute("data-holotip-targets") || "").split("|").map(function (x) { return x.trim(); }).filter(Boolean),
+        cycle: parseInt(li.getAttribute("data-holotip-cycle"), 10) || 0,
+        /* a selector matching several elements: the card stays put and each
+           one pops in turn, every `cycle` ms */
+        pop: li.getAttribute("data-holotip-pop") || null,
         html: li.innerHTML
       });
     });

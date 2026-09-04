@@ -7,9 +7,9 @@
   <li data-holotip-target="#filter_string" data-holotip-side="bottom" data-holotip-title="Hi, I'm Nurro"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-cape.png')}}">
     {% if filter_string %}
-    <p>You just landed in Codex, the map itself. This box holds your question, <b>{{filter_string}}</b>, and you can change it to ask for any cell.</p>
+    <p>You just landed in Codex, the Connectome Data Explorer. This box holds your question, <b>{{filter_string}}</b>, and you can change it to ask for any cell.</p>
     {% else %}
-    <p>You just landed in Codex, the map itself. This box asks for any cell: try a type like <b>DNp03</b>, a name, or an ID.</p>
+    <p>You just landed in Codex, the Connectome Data Explorer. This box asks for any cell: try a type like <b>DNp03</b>, a name, or an ID.</p>
     {% endif %}
   </li>
   {% if num_items %}
@@ -17,17 +17,22 @@
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-microscope.png')}}">
     <p>Codex found {{display(num_items)}} cells that match. Each row is one real neuron from one fly, and the picture is its shape.</p>
   </li>
-  <li data-holotip-target="table.table tbody tr:first-child td:first-child > a" data-holotip-side="right" data-holotip-title="Everything about one cell"
+  <li data-holotip-target="table.table tbody tr:first-child img.skeleton_thumbnail" data-holotip-side="right" data-holotip-title="Everything about one cell"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-lab.png')}}">
-    <p>Click a name to open that cell's own page: its partners, its shape in 3D, and every label people have given it.</p>
+    <p>Click the picture to open that cell's own page: its partners, its shape in 3D, and every label people have given it.</p>
   </li>
-  <li data-holotip-target="table.table tbody tr:first-child a[href*='upstream']" data-holotip-side="bottom" data-holotip-title="Follow the wiring"
+  {# two targets, three seconds each: the card slides from the upstream link to the downstream one and the matching word goes bold #}
+  <li data-holotip-target="table.table tbody tr:first-child a[href*='upstream']"
+      data-holotip-targets="table.table tbody tr:first-child a[href*='upstream']|table.table tbody tr:first-child a[href*='downstream']"
+      data-holotip-cycle="3000" data-holotip-side="bottom" data-holotip-title="Follow the wiring"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-rocket.png')}}">
-    <p>Upstream cells send this one signals and downstream cells receive them. Either link walks the wiring one hop at a time.</p>
+    <p><b data-holotip-phase="0">Upstream</b> cells send this one signals, and <b data-holotip-phase="1">downstream</b> cells receive them. Either link walks the wiring one hop at a time.</p>
   </li>
-  <li data-holotip-target=".card.bg-light" data-holotip-side="bottom" data-holotip-title="The whole list at once"
+  {# the card stays on the bar while each tool in it pops in turn #}
+  <li data-holotip-target=".card.bg-light" data-holotip-pop=".card.bg-light a" data-holotip-cycle="800"
+      data-holotip-side="bottom" data-holotip-title="This bar works on the whole list"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-rocket.png')}}">
-    <p>These take every cell in the list together. Network draws the wiring between them, and 3D view opens them in a viewer you can spin.</p>
+    <p>Stats sums the list up, Network draws the wiring between the cells, 3D view spins them, Pathways finds routes between them, and the rest download the data.</p>
   </li>
   {% endif %}
   <li data-holotip-target="#nav_tour" data-holotip-side="bottom" data-holotip-title="That's the tour" data-holotip-next="Done"

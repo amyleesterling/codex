@@ -57,9 +57,15 @@
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-rocket.png')}}">
     <p>Click <b>3D by type</b> to spin these cells in the viewer, each cell type in its own colour. It opens in a new tab, and I'll wait here.</p>
   </li>
-  <li data-holotip-target="#nav_tour" data-holotip-side="bottom" data-holotip-title="That's the trail" data-holotip-next="Done"
+  <li data-holotip-target="#nav_tour" data-holotip-side="bottom" data-holotip-title="Three more trails" data-holotip-next="Done"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-shades.png')}}">
-    <p>A cell, who it hears, who hears it, and where the signal leaves the brain. Search anything and follow it the same way. I'm under Tour whenever you want me.</p>
+    <p>A cell, who it hears, who hears it. Now walk it the long way, from a smell to a memory to the orders that leave the brain.</p>
+    <ul class="holotip-doors">
+      <li><a href="{{url_for('app.path_length', source_cell_names_or_ids='cell_type == ORN_DA1', target_cell_names_or_ids='cell_type == MBON11', min_syn_count=5, tour=1)}}">A smell, three hops to memory</a></li>
+      <li><a href="{{url_for('app.connectivity', cell_names_or_ids='cell_type == DA1_lPN || cell_type == APL || cell_type == DPM || cell_type == MBON01 || cell_type == MBON11', tour=1)}}">Inside the mushroom body</a></li>
+      <li><a href="{{url_for('app.stats', filter_string='super_class == descending', tour=1)}}">Every order that leaves the brain</a></li>
+    </ul>
+    <p class="fine">Or search anything and follow it the same way. I'm under Tour whenever you want me.</p>
   </li>
 </ol>
 {% endblock tour %}

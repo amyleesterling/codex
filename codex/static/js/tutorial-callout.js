@@ -235,12 +235,14 @@
   Tour.prototype._build = function (step, i) {
     var self = this;
     var total = this.steps.length;
+    /* a chapter of a longer story counts from where the story is */
+    var off = this.options.offset || 0, tot = this.options.total || total;
 
     var node = el("div", "holotip");
     node.tabIndex = -1;
     node.setAttribute("role", "dialog");
     node.setAttribute("aria-modal", "false");
-    node.style.setProperty("--holotip-progress", (i + 1) / total);
+    node.style.setProperty("--holotip-progress", (i + 1 + off) / tot);
     if (step.guide) node.style.setProperty("--holotip-guide", 'url("' + step.guide + '")');
 
     var beak = el("i", "holotip-beak");
@@ -292,7 +294,7 @@
       node.appendChild(h);
       node.setAttribute("aria-labelledby", h.id);
     } else {
-      node.setAttribute("aria-label", "Tour step " + (i + 1) + " of " + total);
+      node.setAttribute("aria-label", "Tour step " + (i + 1 + off) + " of " + tot);
     }
 
     var body = el("div", "holotip-body");
@@ -320,7 +322,7 @@
 
     var count = el("span", "holotip-count");
     count.setAttribute("aria-hidden", "true");
-    count.textContent = (i + 1) + "/" + total;
+    count.textContent = (i + 1 + off) + "/" + tot;
     actions.appendChild(count);
 
     node.appendChild(actions);
@@ -434,7 +436,8 @@
         html: li.innerHTML
       });
     });
-    return holotip(steps);
+    /* data-holotip-offset and data-holotip-total on the list: this chapter's place in a longer story */
+    return holotip(steps, { offset: parseInt(list.getAttribute("data-holotip-offset"), 10) || 0, total: parseInt(list.getAttribute("data-holotip-total"), 10) || 0 });
   };
 
   /* wire up any button that names a step list */

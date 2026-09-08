@@ -46,8 +46,10 @@
             </li>
 
             <li class="nav-item text-nowrap">
-                {# Nurro's tour. On a page with a tour, tutorial-codex.js starts it here; elsewhere the link opens the home page tour. #}
-                <a class="nav-link" id="nav_tour" href="{{url_for('base.index')}}?tour=1" title="A short guided tour with Nurro">
+                {# Nurro's tour: the link opens the story's first page, one cell type in the search, and the chapters hand off from there (tutorial-codex.js) #}
+                <a class="nav-link" id="nav_tour" href="{{url_for('app.search', filter_string='cell_type == DNp03', dataset='banc', tour=1)}}" title="A guided tour with Nurro, from one cell to the cells that hear it"
+                   data-tour-home="{{url_for('app.search', filter_string='cell_type == DNp03', dataset='banc', tour=1)}}"
+                   data-tour-guide="{{url_for('base.asset', filename='nurro/nurro-cozy.png')}}"{% if request.endpoint == 'base.index' %} data-tour-index="1"{% endif %}>
                     <img src="{{url_for('base.asset', filename='nurro.png')}}" alt="">Tour
                 </a>
             </li>

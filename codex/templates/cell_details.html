@@ -2,7 +2,7 @@
 {% block title %} Cell Info {% endblock title %}
 {# Chapter two of Nurro's story: one cell, then its wiring; the "out" link hands off to the downstream chapter. #}
 {% block tour %}
-<ol class="holotip-steps" id="tour" hidden>
+<ol class="holotip-steps" id="tour" hidden data-holotip-offset="10" data-holotip-total="20">
   <li data-holotip-target=".card-columns .card:first-child table.table tbody tr:first-child td:nth-child(2)" data-holotip-side="right" data-holotip-title="One neuron, whole"
       data-holotip-guide="{{url_for('base.asset', filename='nurro/nurro-lab.png')}}">
     <p>Here it is. This page is everything Codex knows about one cell: its name, its shape in 3D, its chemistry, and every label people have given it.</p>
